@@ -44,7 +44,7 @@ output/                      既有阶段性需求和文档处理成果
 scripts/verify.ps1           分层验证入口
 ```
 
-`desktop-js/runtime*`、`release*`、`node_modules`、`test-artifacts`、`output` 和 `outputs` 是构建产物或本机数据，并非随意可删的源码；其中可能包含旧版本、配置、人工标注或输出。`.gitignore` 只防止误加入版本库，**不会备份或保护文件**。本工作目录当前未初始化 Git，使用版本控制前应自行确认需要纳入的文件和敏感数据。
+`desktop-js/runtime*`、`release*`、`node_modules`、`test-artifacts`、`output` 和 `outputs` 是构建产物或本机数据，并非随意可删的源码；其中可能包含旧版本、配置、人工标注或输出。`.gitignore` 只防止误加入版本库，**不会备份或保护文件**。本项目已使用 Git 管理。提交前仍应检查暂存内容，避免纳入用户数据、密钥、模型和其他敏感文件；`.gitignore` 只用于防止误加入，不构成备份或安全保护。
 
 详细分类见[项目目录说明](docs/PROJECT_STRUCTURE.md)和[成果与数据索引](outputs/README.md)。
 
