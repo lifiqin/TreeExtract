@@ -2,6 +2,8 @@
 
 TreeExtract 是面向 Windows 的桌面应用：加载树木位置、相机位姿和全景照片，辅助查看树干、人工校正红圈、导出切图与对照表，并运行本地树种模型。用户也可自愿同意上传当前切图，使用云端视觉与文字复核辅助人工确认。界面采用 JavaScript / Electron；图像和定位由独立的、无界面的 C# / .NET 10 进程处理。
 
+源码仓库：[GitHub · lifiqin/TreeExtract](https://github.com/lifiqin/TreeExtract)（公开）。仓库只保存源码、测试、文档和配置；模型权重、现场数据、运行时、个人配置和密钥不应加入版本库。
+
 AI 和人工维护本项目时，从项目根目录开始，先读[项目开发规则](AGENTS.md)和[系统设计](docs/ARCHITECTURE.md)。
 
 ## 一键启动

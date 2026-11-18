@@ -42,4 +42,4 @@
 - `desktop-js/runtime/` 是开发使用的后端运行时；`desktop-js/release-net10/` 当前保留 `TreeExtract-frame-separation-20261117/` 目录版及历史发布清单。此前旧程序包和旧 .NET 运行时回退副本已按维护者要求清理；源码回退快照位于 `outputs/frame-separation-verification-20261117/`，不含旧运行日志或回放文件。
 - 整理前的文档快照保存在 `outputs/organization-backup-20261116-2828b5a8/`，其中的 `move-plan.json` 记录了本次移动的原路径与新路径。
 
-人工校正通常位于相应数据目录的 `manual_marks.csv`。真实照片、标注、日志、截图及现场位置信息可能敏感；移动、替换、分享或清理之前应先确认归属并备份。当前工作目录未初始化 Git，`.gitignore` 不能代替备份。
+人工校正通常位于相应数据目录的 `manual_marks.csv`。真实照片、标注、日志、截图及现场位置信息可能敏感；移动、替换、分享或清理之前应先确认归属并备份。当前项目已使用 Git 管理，但 `.gitignore` 不能代替备份或敏感信息审查。

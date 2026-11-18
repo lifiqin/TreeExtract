@@ -8,6 +8,33 @@
 - 项目需要 `_deps/ort` 下的 ONNX Runtime、`models/tree_cls.onnx`、`models/person_head.onnx` 和 `models/PERSON_HEAD_LICENSE.txt`。后端构建及检测器会校验人像模型哈希。运行已打包 EXE 不要求用户安装 Node.js 或 .NET SDK；不支持的系统或缺失的 Visual C++ 运行库仍可能导致启动失败。
 - Git 仓库按维护者要求排除 `_deps/` 与 `models/*.onnx`。源码构建前应通过获准的内部渠道准备相应依赖和模型；不要将模型权重、现场数据或用户配置提交到 GitHub。
 
+## GitHub 仓库与同步
+
+正式源码仓库为公开的 [lifiqin/TreeExtract](https://github.com/lifiqin/TreeExtract)，默认分支为 `main`。克隆后先确认工作区状态，再快进同步远端：
+
+```powershell
+git clone https://github.com/lifiqin/TreeExtract.git
+Set-Location .\TreeExtract
+git status --short --branch
+git pull --ff-only origin main
+```
+
+完成改动后，按本文件的验证要求运行对应检查，再逐个暂存本次变更文件并复核内容；不要用 `git add .` 或 `git add -A` 把本机数据一并加入：
+
+```powershell
+git status --short
+git diff --check
+git add README.md docs\DEVELOPMENT.md
+git diff --cached --check
+git diff --cached --stat
+git commit -m "docs: update Git workflow"
+git push origin main
+```
+
+示例中的 `git add` 路径和提交说明应按实际改动替换。推送前确认暂存区只有本次任务相关文件，且 GitHub Actions 的结果已检查；不要强制推送或改写公共历史。当前公开仓库中的提交可能被他人克隆或派生；即使之后删除文件，旧提交中的内容仍可能留存。`.gitignore` 不能替代审查，也不会自动从历史中移除已跟踪文件。用 `git check-ignore -v "path\to\file"` 核对忽略规则，但不能因此提交真实数据、影像/点云、人工标注、密钥、用户配置、日志或未经批准的模型。
+
+`.github/workflows/windows-ci.yml` 配置了 GitHub Actions Windows CI，响应 `push`、`pull_request` 和手动触发；它运行锁文件依赖安装与审计、隔离后端构建及基础验证。CI 不覆盖私有真实数据、Electron UI、便携 EXE 或可信代码签名；仓库存在工作流文件不代表检查已通过。每次推送后请在 [GitHub Actions](https://github.com/lifiqin/TreeExtract/actions) 查看对应运行结果。
+
 首次从源码准备环境，可在项目根目录运行：
 
 ```powershell
@@ -113,7 +140,7 @@ Remove-Item Env:TREEEXTRACT_QA_SKIP_FIXED
 
 - UI 的本地协议与 IPC 做了边界约束，但这不是正式渗透测试，也不是全面安全认证。EXE 当前未签名；没有现成的自动更新、远端 CI 发布或集中监控。
 - 2026-11-13 的 npm 官方审计最初有 6 个中等级告警，关联 [`minimatch` 上游安全公告](https://github.com/isaacs/minimatch/security/advisories/GHSA-g3hv-75wg-m249)；经隔离评估，将构建依赖中 `minimatch@9` / `@10` 显式覆盖到 `11.0.8` 后，官方 registry 审计结果为 0。此覆盖跨主版本，已测试当前 Windows 打包白名单和便携包，不代表其他未使用平台的兼容性；后续应跟进上游并重新审计。默认 npm 镜像审计接口返回 404。NuGet 漏洞查询当日无结果，但它不覆盖手工引用的 ONNX Runtime 二进制或模型。
-- 已提供 `.github/workflows/windows-ci.yml`：锁定 Actions 版本，安装锁文件依赖、做 npm 审计、构建后端，并在严格符号链接模式下运行基础门禁。项目尚未初始化 Git 或接入远端，**该工作流尚未在远端执行**；私有现场数据、UI/EXE 及签名不在此基础作业中。模型和 `_deps/ort` 还须通过组织批准的安全方式提供给未来的 CI。
+- `.github/workflows/windows-ci.yml` 已接入 GitHub Actions，并在推送、拉取请求和手动触发时运行；工作内容及未覆盖范围见[GitHub 仓库与同步](#github-仓库与同步)。是否通过以 [GitHub Actions 运行记录](https://github.com/lifiqin/TreeExtract/actions) 为准；配置工作流不等于通过门禁。私有现场数据、UI/EXE 及签名不在此基础作业中。模型和 `_deps/ort` 仍须通过组织批准的安全方式提供给 CI。
 - 人体模型来源与已知训练数据/权重权利不确定性见[人体与头部检测](guides/人体与头部检测-20261113.md)。尚未完成完整商用许可审查，也未凭模型的头部结果推断头皮结果。
 - 不将现场照片、位姿、真实路径、人工标注、临时日志或敏感截图上传到公开仓库。发布新包前记录 SHA-256，并在安全环境完成独立数据与人工真值验证。
 
