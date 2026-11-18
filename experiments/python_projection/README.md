@@ -26,6 +26,17 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\python_projectio
 
 脚本编译测试专用 C# 程序，直接链接真实 `src/Proj.cs` 和 `src/Geometry.cs`，对同一组合成输入逐项对照 Python；它还检查照片投影往返、接缝、边界、两种 `d` 和俯仰钳制。对照采用绝对误差 `5e-10` 或相对误差 `5e-11`，不是逐位相同的保证。oracle 的 `bin/`、`obj/` 被本地忽略；脚本不会修改正式后端或调用真实数据。此试点测试不属于项目基础质量门，需要单独运行；GitHub Actions 中另设有独立的 `python-projection-parity` 作业，实际状态以运行记录为准。
 
+## 直观对照与微基准
+
+使用不存在的输出目录运行下列命令；有已知 Python 绝对路径时可额外传 `-Python`。脚本仅生成合成输入，不会覆盖已有目录：
+
+```powershell
+$out = Join-Path (Get-Location) 'outputs\projection-comparison-example'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\python_projection\run-comparison.ps1 -OutputDirectory $out
+```
+
+结果包括 `summary.json`，记录数值对照、逐次计时和环境。若 Python 环境提供 Pillow 且 Windows 安装了微软雅黑，还会生成 `projection-comparison.png`。Pillow 只用于这张可选示意图，不是试点算法或一致性测试的依赖；缺少时 `visual_created` 为 `false`。示意图是合成方向点，不是现场照片或检测效果。[一次本机测试记录](BENCHMARK.md)解释了测量方法和局限；不要把微基准的倍率当成整个软件的加速比。
+
 ## 后续迁移与回退
 
 Python 可用于算法实验，但全面替换 C# 还须逐模块核对：JSON Lines 协议和错误语义、会话与并发、图像处理、ONNX 及其模型、帧预留与人工校正、保存和上传确认、性能、Windows 分发及许可证。必须补充真实进程/界面、异常与数据保护测试，并在有独立人工真值时核对现场效果；不能凭本次数学对照或合成样本宣布整体兼容或准确率提升。

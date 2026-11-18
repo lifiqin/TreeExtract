@@ -12,6 +12,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from experiments.python_projection import projection  # noqa: E402
+import compare  # noqa: E402
 
 
 def case(operation, d, *args):
@@ -74,6 +75,23 @@ def evaluate_python(request):
 
 
 class ProjectionTests(unittest.TestCase):
+    def test_comparison_is_reproducible_and_rejects_mismatches(self):
+        pixel, natural = compare.make_cases()
+        visual = compare.visual_cases()
+        self.assertEqual((len(pixel), len(natural), len(visual)), (512, 512, 25))
+        self.assertEqual((pixel, natural), compare.make_cases())
+        py_pixel = [projection.pixel_from_world(*args) for args in pixel]
+        py_natural = [projection.world_from_pixel_natural(*args) for args in natural]
+        py_visual = [projection.pixel_from_world(*args) for args in visual]
+        summary, _ = compare.check_agreement(pixel, natural, visual, py_pixel, py_natural, py_visual)
+        self.assertEqual(summary["max_pixel_distance_4000x3000"], 0.0)
+        wrong_pixel = py_pixel.copy()
+        wrong_pixel[0] = (wrong_pixel[0][0] + 0.01, wrong_pixel[0][1])
+        with self.assertRaisesRegex(RuntimeError, "mismatch"):
+            compare.check_agreement(pixel, natural, visual, wrong_pixel, py_natural, py_visual)
+        with self.assertRaisesRegex(RuntimeError, "count mismatch"):
+            compare.check_agreement(pixel, natural, visual, py_pixel[:-1], py_natural, py_visual)
+
     def test_reference_values_and_csharp_fallback(self):
         self.assertAlmostEqual(projection.half_scale(45.0, 1.0), 2 * (math.sqrt(2) - 1), places=14)
         self.assertEqual(projection.pixel_from_world(0, 0, 0, 0, 1, 1, 0), (0.5, 0.5))
