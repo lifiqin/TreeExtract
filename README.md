@@ -6,6 +6,8 @@ TreeExtract 是面向 Windows 的桌面应用：加载树木位置、相机位�
 
 AI 和人工维护本项目时，从项目根目录开始，先读[项目开发规则](AGENTS.md)和[系统设计](docs/ARCHITECTURE.md)。
 
+本分支包含独立的 [Python 投影算法试点](experiments/python_projection/README.md)，用于与 C# 数学实现对照；尚未接入或替换正式软件。
+
 ## 一键启动
 
 本机当前保留的 Windows x64 目录版为 `desktop-js/release-net10/TreeExtract-frame-separation-20261117/TreeExtract.exe`。这是免安装版本，运行时和模型位于同一目录，启动无需重新解压；移动时须连同整个 `TreeExtract-frame-separation-20261117` 文件夹复制。旧发行包、旧 .NET 运行时回退副本及原快捷方式已按维护者要求清理；改动前源码快照另存于 `outputs/frame-separation-verification-20261117/`，不包含被清理的旧运行日志或回放文件。EXE 未进行代码签名，Windows 可能显示安全提示。
