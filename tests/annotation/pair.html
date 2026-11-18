@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src blob:; connect-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>TreeExtract 双帧候选复核</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>双帧实际候选复核</h1>
+        <p>
+          此页面<strong>会显示算法候选</strong>。请先完成并保存主帧盲标，再打开本页。图证是未经人体遮挡处理的原始分析全景，可能包含人物，请在本地安全环境查看。
+        </p>
+        <p>红色线框仅表示程序实际采纳的候选，不证明它是树干或正确树号。缺少独立依据时保持未知。</p>
+      </header>
+      <section class="setup" aria-label="选择本地证据">
+        <label
+          >1. 已保存的主帧标注 JSON
+          <input id="labels-file" type="file" accept=".json,application/json"
+        /></label>
+        <label
+          >2. 同一采集包的 predictions.json
+          <input id="predictions-file" type="file" accept=".json,application/json"
+        /></label>
+        <label
+          >3. 选择 evidence/pairs 文件夹 <input id="pairs-dir" type="file" webkitdirectory multiple
+        /></label>
+        <label
+          >双帧复核者代号
+          <input
+            id="reviewer"
+            type="text"
+            maxlength="80"
+            autocomplete="off"
+            placeholder="例如 pair-reviewer-01"
+        /></label>
+        <button id="export" type="button" disabled>校验并下载双帧复核 JSON</button>
+      </section>
+      <p id="status" role="status" aria-live="polite">请选择主帧标注、预测清单和 pairs 文件夹。</p>
+      <div class="navigation">
+        <button id="previous" type="button" disabled>上一组</button>
+        <strong id="sample-title">尚未加载样本</strong>
+        <button id="next" type="button" disabled>下一组</button>
+      </div>
+      <p id="identity"></p>
+      <section class="pair-images" aria-label="两个实际胜出候选">
+        <div>
+          <h2>主帧 A 的实际候选</h2>
+          <img id="image-a" alt="主帧 A 分析全景与算法候选" hidden />
+        </div>
+        <div>
+          <h2>辅助帧 B 的实际候选</h2>
+          <img id="image-b" alt="辅助帧 B 分析全景与算法候选" hidden />
+        </div>
+      </section>
+      <section class="pair-form" aria-label="双帧人工判断">
+        <label
+          >两个候选是否为同一棵树
+          <select id="same-tree" disabled>
+            <option value="unknown">未知 / 无法确认</option>
+            <option value="yes">是</option>
+            <option value="no">否</option>
+          </select>
+        </label>
+        <label
+          >两个候选是否都是独立资料中的目标树
+          <select id="target-tree" disabled>
+            <option value="unknown">未知 / 无法确认</option>
+            <option value="yes">是</option>
+            <option value="no">否</option>
+          </select>
+        </label>
+        <label class="checkbox"
+          ><input id="candidates-visible" type="checkbox" disabled /> 我已核对 A/B
+          两幅图中实际候选线框可辨认</label
+        >
+        <button id="apply" type="button" disabled>记录当前复核</button>
+        <button id="clear" type="button" disabled>清除当前复核，保持未知</button>
+      </section>
+    </main>
+    <script src="./annotation-core.js"></script>
+    <script src="./pair.js"></script>
+  </body>
+</html>

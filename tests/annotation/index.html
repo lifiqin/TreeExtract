@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src blob:; connect-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>TreeExtract 离线盲标</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>真实照片独立标注</h1>
+        <p>
+          离线使用，不加载预测、不上传照片。只有能结合独立资料确认目标树时，才标出可见树干的中点；不确定请选择“未知”。
+        </p>
+      </header>
+      <section class="setup" aria-label="选择本地文件">
+        <label
+          >1. 选择标注模板或已保存标注
+          <input id="labels-file" type="file" accept=".json,application/json"
+        /></label>
+        <label
+          >2. 选择 <code>clean</code> 照片文件夹
+          <input id="photos-dir" type="file" webkitdirectory multiple
+        /></label>
+        <label
+          >标注者代号
+          <input
+            id="reviewer"
+            type="text"
+            maxlength="80"
+            autocomplete="off"
+            placeholder="例如 reviewer-01"
+        /></label>
+        <label
+          >标注方式
+          <select id="review-method">
+            <option value="blind">未看到预测（盲标）</option>
+            <option value="prediction_visible">已经看过预测</option>
+          </select>
+        </label>
+        <button id="export" type="button" disabled>校验并下载标注 JSON</button>
+      </section>
+      <p id="status" role="status" aria-live="polite">请选择本地标注模板及 clean 照片文件夹。</p>
+      <section class="work" aria-label="照片标注">
+        <div class="image-column">
+          <div class="navigation">
+            <button id="previous" type="button" disabled>上一张</button>
+            <strong id="sample-title">尚未加载样本</strong>
+            <button id="next" type="button" disabled>下一张</button>
+          </div>
+          <p id="identity"></p>
+          <div id="image-shell" class="image-shell" hidden>
+            <img id="photo" alt="当前无预测标记的照片，点击确认可见树干的中点" />
+            <svg id="point-layer" class="point-layer" hidden aria-hidden="true">
+              <circle id="point-border" class="point-border" r="11"></circle>
+              <circle id="point" class="point" r="11"></circle>
+            </svg>
+          </div>
+          <p id="coordinates">树干中点：未知</p>
+          <button id="clear-point" type="button" disabled>清除中点坐标</button>
+          <div class="coordinate-input">
+            <label
+              >中点 x（0～1）
+              <input id="point-x" type="number" min="0" max="1" step="0.0001" disabled
+            /></label>
+            <label
+              >中点 y（0～1）
+              <input id="point-y" type="number" min="0" max="1" step="0.0001" disabled
+            /></label>
+            <button id="set-point" type="button" disabled>应用中点坐标</button>
+          </div>
+        </div>
+        <div class="form-column">
+          <h2>当前照片</h2>
+          <p id="review-info">尚未标注。</p>
+          <label
+            >目标树干是否可确认且可见
+            <select id="target" disabled>
+              <option value="unknown">未知 / 无法确认</option>
+              <option value="yes">是</option>
+              <option value="no">否</option>
+            </select>
+          </label>
+          <label
+            >人体任何部分是否可见
+            <select id="person" disabled>
+              <option value="unknown">未知 / 无法辨认</option>
+              <option value="yes">是</option>
+              <option value="no">否</option>
+            </select>
+          </label>
+          <label
+            >头部是否可见
+            <select id="head" disabled>
+              <option value="unknown">未知 / 无法辨认</option>
+              <option value="yes">是</option>
+              <option value="no">否</option>
+            </select>
+          </label>
+          <label
+            >头皮或头顶是否可见
+            <select id="scalp" disabled>
+              <option value="unknown">未知 / 无法辨认</option>
+              <option value="yes">是</option>
+              <option value="no">否</option>
+            </select>
+          </label>
+          <button id="apply-reviewer" type="button" disabled>将上方代号与方式应用到当前标注</button>
+          <p class="note">
+            本页面不判定两帧是否为同一棵树。B 帧候选及图证需另行独立核实；没有图证时保持未知。
+          </p>
+        </div>
+      </section>
+    </main>
+    <script src="./annotation-core.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

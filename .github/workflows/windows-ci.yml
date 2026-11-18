@@ -1,0 +1,52 @@
+name: Windows CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  core:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          dotnet-version: '10.0.404'
+      - name: Install locked JavaScript dependencies without lifecycle scripts
+        shell: powershell
+        working-directory: desktop-js
+        run: |
+          npm.cmd ci --ignore-scripts --no-audit --no-fund
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Audit JavaScript dependencies
+        shell: powershell
+        working-directory: desktop-js
+        run: |
+          npm.cmd audit --registry=https://registry.npmjs.org/ --audit-level=moderate
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Build isolated self-contained backend
+        shell: powershell
+        run: |
+          .\desktop-js\scripts\build-bridge.ps1 -KeepBackup
+      - name: Run core verification
+        shell: powershell
+        run: |
+          .\scripts\verify.ps1 -RequireSymlink
+      - name: State what this job did not verify
+        shell: powershell
+        run: |
+          Write-Host 'NOT RUN: private real-data benchmarks, Electron UI, portable EXE and trusted code signing.'

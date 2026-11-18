@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <AssemblyName>TreeExtractor.Tests</AssemblyName>
+    <StartupObject>TreeExtractor.ModernTestRunner</StartupObject>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\src\**\*.cs" />
+    <Compile Include="..\desktop-js\bridge\*.cs" />
+    <Compile Include="ModernTestRunner.cs;DesktopProtocolTests.cs;ProjectionNearestTests.cs;DualFrameRegressionTests.cs;DualFramePhysicalTests.cs;QAGeometryTests.cs;QAFullNearest.cs;PersonHeadTests.cs;DataIntegrityTests.cs" />
+  </ItemGroup>
+  <Import Project="..\backend\Dependencies.props" />
+</Project>

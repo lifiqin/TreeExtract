@@ -1,0 +1,17 @@
+<Project>
+  <PropertyGroup>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestoreLockedMode>true</RestoreLockedMode>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- 保持与原应用相同的 ONNX Runtime 版本和模型，避免迁移时改变识别结果。 -->
+    <PackageReference Include="System.Drawing.Common" Version="10.0.15" />
+    <Reference Include="Microsoft.ML.OnnxRuntime">
+      <HintPath>$(MSBuildThisFileDirectory)..\_deps\ort\lib\netstandard2.0\Microsoft.ML.OnnxRuntime.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <None Include="$(MSBuildThisFileDirectory)..\_deps\ort\onnxruntime.dll"
+          Link="onnxruntime.dll" CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

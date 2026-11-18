@@ -1,0 +1,513 @@
+[
+  {
+    "name": "常绿乔木",
+    "entries": [
+      {
+        "value": "zhangshu",
+        "name": "香樟"
+      },
+      {
+        "value": "女贞",
+        "name": "女贞"
+      },
+      {
+        "value": "广玉兰",
+        "name": "广玉兰"
+      },
+      {
+        "value": "杜英",
+        "name": "杜英"
+      },
+      {
+        "value": "金合欢",
+        "name": "金合欢"
+      },
+      {
+        "value": "柳杉",
+        "name": "柳杉"
+      },
+      {
+        "value": "xuesongshu",
+        "name": "雪松"
+      },
+      {
+        "value": "深山含笑",
+        "name": "深山含笑"
+      },
+      {
+        "value": "songshu",
+        "name": "松树"
+      },
+      {
+        "value": "shanshu",
+        "name": "杉树"
+      },
+      {
+        "value": "fir",
+        "name": "冷杉"
+      },
+      {
+        "value": "oak",
+        "name": "橡树"
+      },
+      {
+        "value": "zonglvshu",
+        "name": "棕榈树"
+      }
+    ]
+  },
+  {
+    "name": "落叶乔木",
+    "entries": [
+      {
+        "value": "水杉",
+        "name": "水杉"
+      },
+      {
+        "value": "池杉",
+        "name": "池杉"
+      },
+      {
+        "value": "悬铃木",
+        "name": "悬铃木"
+      },
+      {
+        "value": "willow",
+        "name": "柳树"
+      },
+      {
+        "value": "合欢",
+        "name": "合欢"
+      },
+      {
+        "value": "栾树",
+        "name": "栾树"
+      },
+      {
+        "value": "wutongshu",
+        "name": "青桐"
+      },
+      {
+        "value": "重阳木",
+        "name": "重阳木"
+      },
+      {
+        "value": "wuhuanzishu",
+        "name": "无患子"
+      },
+      {
+        "value": "poplar",
+        "name": "意扬"
+      },
+      {
+        "value": "枫杨",
+        "name": "枫杨"
+      },
+      {
+        "value": "乌柏",
+        "name": "乌柏"
+      },
+      {
+        "value": "臭椿",
+        "name": "臭椿"
+      },
+      {
+        "value": "香椿",
+        "name": "香椿"
+      },
+      {
+        "value": "苦楝",
+        "name": "苦楝"
+      },
+      {
+        "value": "七叶树",
+        "name": "七叶树"
+      },
+      {
+        "value": "马褂木",
+        "name": "马褂木"
+      },
+      {
+        "value": "槐树",
+        "name": "槐树"
+      },
+      {
+        "value": "elm",
+        "name": "榆树"
+      },
+      {
+        "value": "ginkgo",
+        "name": "银杏"
+      },
+      {
+        "value": "jvshu",
+        "name": "榉树"
+      },
+      {
+        "value": "青枫",
+        "name": "青枫"
+      },
+      {
+        "value": "朴树",
+        "name": "朴树"
+      },
+      {
+        "value": "青冈栎",
+        "name": "青冈栎"
+      },
+      {
+        "value": "maple",
+        "name": "枫树"
+      },
+      {
+        "value": "birch",
+        "name": "桦树"
+      },
+      {
+        "value": "stinkingsumac",
+        "name": "漆树"
+      },
+      {
+        "value": "magnolia",
+        "name": "玉兰"
+      },
+      {
+        "value": "cherry",
+        "name": "樱花"
+      },
+      {
+        "value": "peach",
+        "name": "桃树"
+      },
+      {
+        "value": "apple",
+        "name": "苹果树"
+      },
+      {
+        "value": "pear",
+        "name": "梨树"
+      },
+      {
+        "value": "walnut",
+        "name": "核桃树"
+      },
+      {
+        "value": "chestnut",
+        "name": "栗树"
+      }
+    ]
+  },
+  {
+    "name": "常绿灌木",
+    "entries": [
+      {
+        "value": "黄杨类",
+        "name": "黄杨类"
+      },
+      {
+        "value": "cypress",
+        "name": "柏类"
+      },
+      {
+        "value": "夹竹桃",
+        "name": "夹竹桃"
+      },
+      {
+        "value": "珊瑚",
+        "name": "珊瑚"
+      },
+      {
+        "value": "八角金盘",
+        "name": "八角金盘"
+      },
+      {
+        "value": "海桐",
+        "name": "海桐"
+      },
+      {
+        "value": "栀子",
+        "name": "栀子"
+      },
+      {
+        "value": "黄磬",
+        "name": "黄磬"
+      },
+      {
+        "value": "迎春",
+        "name": "迎春"
+      },
+      {
+        "value": "金叶女贞",
+        "name": "金叶女贞"
+      },
+      {
+        "value": "红花橙木",
+        "name": "红花橙木"
+      },
+      {
+        "value": "火棘",
+        "name": "火棘"
+      },
+      {
+        "value": "丝兰",
+        "name": "丝兰"
+      },
+      {
+        "value": "石楠",
+        "name": "石楠"
+      },
+      {
+        "value": "十大功劳",
+        "name": "十大功劳"
+      },
+      {
+        "value": "桂花",
+        "name": "桂花"
+      },
+      {
+        "value": "桃叶珊瑚",
+        "name": "桃叶珊瑚"
+      },
+      {
+        "value": "蚊母",
+        "name": "蚊母"
+      },
+      {
+        "value": "杜鹃",
+        "name": "杜鹃"
+      },
+      {
+        "value": "构骨",
+        "name": "构骨"
+      },
+      {
+        "value": "山茶",
+        "name": "山茶"
+      },
+      {
+        "value": "胡颓子",
+        "name": "胡颓子"
+      },
+      {
+        "value": "含笑",
+        "name": "含笑"
+      }
+    ]
+  },
+  {
+    "name": "落叶灌木",
+    "entries": [
+      {
+        "value": "月季",
+        "name": "月季"
+      },
+      {
+        "value": "木槿",
+        "name": "木槿"
+      },
+      {
+        "value": "木芙蓉",
+        "name": "木芙蓉"
+      },
+      {
+        "value": "红叶李",
+        "name": "红叶李"
+      },
+      {
+        "value": "红枫",
+        "name": "红枫"
+      },
+      {
+        "value": "紫薇",
+        "name": "紫薇"
+      },
+      {
+        "value": "花桃",
+        "name": "花桃"
+      },
+      {
+        "value": "plum",
+        "name": "花梅"
+      },
+      {
+        "value": "南天竹",
+        "name": "南天竹"
+      },
+      {
+        "value": "红叶小蘖",
+        "name": "红叶小蘖"
+      },
+      {
+        "value": "紫荆",
+        "name": "紫荆"
+      },
+      {
+        "value": "紫玉兰",
+        "name": "紫玉兰"
+      },
+      {
+        "value": "金丝桃",
+        "name": "金丝桃"
+      },
+      {
+        "value": "郁李",
+        "name": "郁李"
+      },
+      {
+        "value": "垂丝海棠",
+        "name": "垂丝海棠"
+      },
+      {
+        "value": "贴梗海棠",
+        "name": "贴梗海棠"
+      },
+      {
+        "value": "西府海棠",
+        "name": "西府海棠"
+      },
+      {
+        "value": "红瑞木",
+        "name": "红瑞木"
+      },
+      {
+        "value": "木绣球",
+        "name": "木绣球"
+      },
+      {
+        "value": "石榴",
+        "name": "石榴"
+      },
+      {
+        "value": "八仙花",
+        "name": "八仙花"
+      },
+      {
+        "value": "锦带",
+        "name": "锦带"
+      },
+      {
+        "value": "溲疏",
+        "name": "溲疏"
+      },
+      {
+        "value": "棣棠",
+        "name": "棣棠"
+      },
+      {
+        "value": "结香",
+        "name": "结香"
+      },
+      {
+        "value": "腊梅",
+        "name": "腊梅"
+      }
+    ]
+  },
+  {
+    "name": "竹类",
+    "entries": [
+      {
+        "value": "慈孝竹",
+        "name": "慈孝竹"
+      },
+      {
+        "value": "凤尾竹",
+        "name": "凤尾竹"
+      },
+      {
+        "value": "紫竹",
+        "name": "紫竹"
+      },
+      {
+        "value": "刚竹",
+        "name": "刚竹"
+      },
+      {
+        "value": "毛竹",
+        "name": "毛竹"
+      },
+      {
+        "value": "哺鸡竹",
+        "name": "哺鸡竹"
+      }
+    ]
+  },
+  {
+    "name": "攀缘植物",
+    "entries": [
+      {
+        "value": "紫藤",
+        "name": "紫藤"
+      },
+      {
+        "value": "金银花",
+        "name": "金银花"
+      },
+      {
+        "value": "常春藤",
+        "name": "常春藤"
+      },
+      {
+        "value": "木香",
+        "name": "木香"
+      },
+      {
+        "value": "凌霄",
+        "name": "凌霄"
+      },
+      {
+        "value": "蔓常春花",
+        "name": "蔓常春花"
+      },
+      {
+        "value": "油麻藤",
+        "name": "油麻藤"
+      }
+    ]
+  },
+  {
+    "name": "地被植物",
+    "entries": [
+      {
+        "value": "美人蕉",
+        "name": "美人蕉"
+      },
+      {
+        "value": "葱兰",
+        "name": "葱兰"
+      },
+      {
+        "value": "麦冬",
+        "name": "麦冬"
+      },
+      {
+        "value": "红花酢浆草",
+        "name": "红花酢浆草"
+      },
+      {
+        "value": "鸢尾",
+        "name": "鸢尾"
+      },
+      {
+        "value": "石蒜",
+        "name": "石蒜"
+      },
+      {
+        "value": "燕麦草",
+        "name": "燕麦草"
+      },
+      {
+        "value": "各类草皮",
+        "name": "各类草皮"
+      },
+      {
+        "value": "马蹄筋",
+        "name": "马蹄筋"
+      },
+      {
+        "value": "白三叶",
+        "name": "白三叶"
+      }
+    ]
+  }
+]

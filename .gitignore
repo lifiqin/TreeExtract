@@ -1,0 +1,20 @@
+backend/bin/
+backend/obj/
+tests/bin/
+tests/obj/
+
+# Generated files and local data must not be committed by accident.
+/desktop-js/node_modules/
+/desktop-js/runtime/
+/desktop-js/runtime-stage-*/
+/desktop-js/runtime-backup-*/
+/desktop-js/release*/
+/desktop-js/test-artifacts/
+/output/
+/outputs/
+/_deps/
+/models/*.onnx
+/.workbuddy/
+/.trae-html-share-packages/
+*.log
+__pycache__/

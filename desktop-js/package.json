@@ -1,0 +1,75 @@
+{
+  "name": "treeextract-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TreeExtract JavaScript desktop interface",
+  "author": "TreeExtract Project",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:bridge": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/build-bridge.ps1",
+    "package:win": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/package-win.ps1",
+    "test": "node --test tests/*.test.js",
+    "test:architecture": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File ../tests/check_headless.ps1",
+    "test:ui": "node tests/ui-smoke.js",
+    "test:ui:layout": "node tests/ui-layout-smoke.js",
+    "test:ui:merge": "node tests/ui-merge-smoke.js",
+    "test:ui:frame-separation": "node tests/ui-frame-separation-smoke.js",
+    "test:ui:pan": "node tests/ui-real-pan-smoke.js",
+    "test:ui:species": "node tests/ui-species-smoke.js",
+    "test:portable": "node tests/portable-smoke.js",
+    "format": "prettier --write \"src/**/*.{js,mjs,html,css}\" \"tests/*.js\" package.json",
+    "format:check": "prettier --check \"src/**/*.{js,mjs,html,css}\" \"tests/*.js\" package.json"
+  },
+  "devDependencies": {
+    "electron": "45.3.0",
+    "electron-builder": "26.18.0",
+    "playwright": "1.65.0",
+    "prettier": "3.10.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "overrides": {
+    "minimatch@9": "11.0.8",
+    "minimatch@10": "11.0.8"
+  },
+  "build": {
+    "appId": "org.treeextract.desktop",
+    "productName": "TreeExtract",
+    "directories": {
+      "output": "release-net10"
+    },
+    "electronDist": "node_modules/electron/dist",
+    "asar": true,
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "runtime",
+        "to": "runtime",
+        "filter": [
+          "*.dll",
+          "TreeExtractorBridge.exe",
+          "TreeExtractorBridge.deps.json",
+          "TreeExtractorBridge.runtimeconfig.json",
+          "models/tree_cls.onnx",
+          "models/person_head.onnx",
+          "models/PERSON_HEAD_LICENSE.txt"
+        ]
+      }
+    ],
+    "portable": {
+      "unpackDirName": false
+    },
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "signAndEditExecutable": false,
+      "artifactName": "TreeExtract-Portable.exe"
+    }
+  }
+}

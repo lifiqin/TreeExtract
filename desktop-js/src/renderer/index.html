@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'"
+    />
+    <title>TreeExtract · 单木工作台</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32">
+            <path d="M16 4c-1 6-8 6-8 13a8 8 0 0 0 16 0c0-7-7-7-8-13Z" />
+            <path d="M16 13v14m0-7-4-4m4 8 4-5" />
+          </svg>
+        </div>
+        <div><strong>TreeExtract</strong><span>全景单木工作台</span></div>
+      </div>
+      <div class="header-context">
+        <span class="context-label">当前数据</span
+        ><span id="data-name" class="context-value">等待加载</span
+        ><span id="connection-dot" class="status-dot"></span
+        ><span id="connection-label">正在连接</span>
+      </div>
+      <div class="header-actions">
+        <button id="open-merge" class="button button-outline">合并采集数据</button>
+        <button id="choose-data" class="button button-quiet">选择数据目录</button>
+        <button id="choose-zip" class="button button-quiet">选择全景包</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="sidebar">
+        <section class="side-section intro-section">
+          <div class="eyebrow">SURVEY WORKSPACE</div>
+          <h1>单木定位</h1>
+          <p>从全景帧中定位目标，校正切图并识别树种。</p>
+          <div class="dataset-summary">
+            <div><strong id="summary-trees">—</strong><span>棵树</span></div>
+            <div><strong id="summary-frames">—</strong><span>张全景帧</span></div>
+            <div><strong>18</strong><span>本地树种</span></div>
+          </div>
+        </section>
+
+        <section class="side-section tree-section">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">01 / SELECT</span>
+              <h2>选择树木</h2>
+            </div>
+            <button id="open-table" class="text-button" data-requires-data>对照表 ↗</button>
+          </div>
+          <label class="search-field"
+            ><span aria-hidden="true">⌕</span
+            ><input id="tree-search" type="search" placeholder="搜索树 ID" aria-label="搜索树 ID"
+          /></label>
+          <div id="tree-list" class="tree-list" role="listbox" aria-label="树木列表">
+            <div class="list-empty">加载数据后显示树木</div>
+          </div>
+          <div class="tree-nav">
+            <button id="previous-tree" class="button button-outline" data-requires-data>
+              ← 上一棵</button
+            ><button id="next-tree" class="button button-outline" data-requires-data>
+              下一棵 →
+            </button>
+          </div>
+          <button id="nearest-tree" class="button button-primary full-width" data-requires-data>
+            <span class="button-icon">◎</span> 定位当前帧最近树
+          </button>
+          <p class="hint">按当前相机位置计算；不保证未被遮挡。</p>
+        </section>
+
+        <details class="side-section settings-section">
+          <summary>
+            <span><span class="section-kicker">02 / SETTINGS</span><strong>定位与投影</strong></span
+            ><span class="chevron">⌄</span>
+          </summary>
+          <div class="settings-body">
+            <label class="switch-row"
+              ><span>自动选帧<small>为当前树选择照片；切换树时恢复自动</small></span
+              ><input
+                id="option-autoFrame"
+                type="checkbox"
+                data-option="autoFrame"
+                data-requires-data
+            /></label>
+            <label class="strategy-row" for="option-frameStrategy">
+              <span>自动主帧选择</span>
+              <select id="option-frameStrategy" data-option="frameStrategy" data-requires-data>
+                <option value="quality">优质近帧（不保证绝对最近）</option>
+                <option value="nearest">水平最近（可能同帧、过近或遮挡）</option>
+              </select>
+              <small>仅比较具有完整位姿的帧；手动固定帧只对当前树有效。</small>
+            </label>
+            <label class="switch-row"
+              ><span>双帧定位<small>自动选择辅助帧 B，不支持手动指定</small></span
+              ><input
+                id="option-dualFrame"
+                type="checkbox"
+                data-option="dualFrame"
+                data-requires-data
+            /></label>
+            <label class="switch-row"
+              ><span>水平视角<small>自动移轴保留树顶</small></span
+              ><input
+                id="option-levelView"
+                type="checkbox"
+                data-option="levelView"
+                data-requires-data
+            /></label>
+            <label class="switch-row"
+              ><span>边缘保形<small>关闭可对照旧投影</small></span
+              ><input
+                id="option-lowDistortion"
+                type="checkbox"
+                data-option="lowDistortion"
+                data-requires-data
+            /></label>
+            <label class="switch-row"
+              ><span>锁定视角<small>跟随当前树干位置</small></span
+              ><input
+                id="option-lockView"
+                type="checkbox"
+                data-option="lockView"
+                data-requires-data
+            /></label>
+            <div class="number-grid">
+              <label
+                >水平修正 °<input
+                  id="option-cal"
+                  type="number"
+                  min="-180"
+                  max="180"
+                  step="any"
+                  data-option="cal"
+                  data-requires-data
+              /></label>
+              <label
+                >垂直修正 °<input
+                  id="option-calV"
+                  type="number"
+                  min="-90"
+                  max="90"
+                  step="any"
+                  data-option="calV"
+                  data-requires-data
+              /></label>
+              <label
+                >切图水平 °<input
+                  id="option-cropWidth"
+                  type="number"
+                  min="1"
+                  max="120"
+                  step="any"
+                  data-option="cropWidth"
+                  data-requires-data
+              /></label>
+              <label
+                >切图垂直 °<input
+                  id="option-cropHeight"
+                  type="number"
+                  min="1"
+                  max="180"
+                  step="any"
+                  data-option="cropHeight"
+                  data-requires-data
+              /></label>
+              <label
+                >目标方位 °<input
+                  id="option-bearing"
+                  type="number"
+                  min="0"
+                  max="360"
+                  step="any"
+                  data-option="bearing"
+                  data-requires-data
+              /></label>
+              <label
+                >目标距离 m<input
+                  id="option-distance"
+                  type="number"
+                  min="0.5"
+                  max="1000"
+                  step="any"
+                  data-option="distance"
+                  data-requires-data
+              /></label>
+              <label
+                >目标仰角 °<input
+                  id="option-elevation"
+                  type="number"
+                  min="-90"
+                  max="90"
+                  step="any"
+                  data-option="elevation"
+                  data-requires-data
+              /></label>
+              <label
+                >预览方位 °<input
+                  id="option-viewPan"
+                  type="number"
+                  min="0"
+                  max="360"
+                  step="any"
+                  data-option="viewPan"
+                  data-requires-data
+              /></label>
+              <label
+                >预览俯仰 °<input
+                  id="option-viewTilt"
+                  type="number"
+                  min="-89"
+                  max="89"
+                  step="any"
+                  data-option="viewTilt"
+                  data-requires-data
+              /></label>
+              <label
+                >预览视场 °<input
+                  id="option-viewFov"
+                  type="number"
+                  min="20"
+                  max="140"
+                  step="1"
+                  data-option="viewFov"
+                  data-requires-data
+              /></label>
+            </div>
+            <p class="hint">手动修改目标或预览方向时，会分别关闭自动选帧或锁定视角。</p>
+          </div>
+        </details>
+      </aside>
+
+      <section class="main-column" aria-label="全景与照片">
+        <div class="workspace-heading">
+          <div>
+            <div class="eyebrow">FIELD VIEW / 现场影像</div>
+            <h2>全景定位工作区</h2>
+            <p>查看观测帧、调整视角并校准树干位置。</p>
+          </div>
+          <div class="tree-chip"><span>当前树 ID</span><strong id="current-tree">—</strong></div>
+        </div>
+        <article id="pano-card" class="media-card pano-card">
+          <div class="card-header">
+            <div>
+              <span class="card-icon">◉</span><strong>全景预览</strong><span class="tag">360°</span>
+            </div>
+            <div class="card-tools">
+              <button
+                id="previous-frame"
+                class="icon-button"
+                title="上一帧"
+                aria-label="上一帧"
+                data-requires-data
+              >
+                ←</button
+              ><span id="frame-position" class="mono">— / —</span
+              ><button
+                id="next-frame"
+                class="icon-button"
+                title="下一帧"
+                aria-label="下一帧"
+                data-requires-data
+              >
+                →
+              </button>
+              <button
+                class="focus-button"
+                data-focus-target="pano-card"
+                data-focus-label="全景预览"
+                aria-label="放大全景预览"
+                aria-controls="pano-card"
+                aria-expanded="false"
+                data-requires-data
+              >
+                放大
+              </button>
+            </div>
+          </div>
+          <div id="dual-summary" class="dual-summary" data-state="unavailable" aria-live="polite">
+            <div class="dual-result-line">
+              <strong id="dual-result">双帧：未就绪</strong>
+              <span id="dual-reason">请选择树木和照片</span>
+            </div>
+            <div id="dual-frames" class="dual-frames">主帧 A：— · 辅助帧 B：—</div>
+            <details id="dual-diagnostics" class="dual-diagnostics" hidden>
+              <summary id="dual-diagnostics-title">查看逐帧验证</summary>
+              <ul id="dual-diagnostics-list"></ul>
+              <small>纹理相关性不是识别准确率；辅助帧在全景中量测，仍需人工核查。</small>
+            </details>
+            <div id="distance-warning" class="distance-warning" role="status" hidden></div>
+          </div>
+          <div id="pano-stage" class="image-stage pano-stage">
+            <img id="pano-image" alt="当前全景帧的透视预览" draggable="false" />
+            <div id="pano-empty" class="empty-state">
+              <span class="empty-glyph">◎</span><strong>等待全景数据</strong
+              ><small>选择数据目录后将显示当前帧</small>
+            </div>
+            <div class="image-overlay top-left">
+              <span class="live-dot"></span><span id="frame-name">未选择帧</span>
+            </div>
+            <div id="pano-hint" class="image-overlay bottom-right">拖动旋转 · 滚轮缩放</div>
+          </div>
+        </article>
+        <article id="photo-card" class="media-card photo-card">
+          <div class="card-header">
+            <div>
+              <span class="card-icon">▣</span><strong>矫正照片</strong
+              ><span class="tag">4 : 3</span>
+            </div>
+            <div class="card-tools">
+              <span id="mark-mode" class="mode-label">未选中树</span
+              ><button
+                id="edit-mark"
+                class="button button-small button-outline"
+                data-requires-data
+                aria-pressed="false"
+              >
+                调整红圈
+              </button>
+              <button
+                class="focus-button"
+                data-focus-target="photo-card"
+                data-focus-label="矫正照片"
+                aria-label="放大矫正照片"
+                aria-controls="photo-card"
+                aria-expanded="false"
+                data-requires-data
+              >
+                放大
+              </button>
+            </div>
+          </div>
+          <div id="photo-stage" class="image-stage photo-stage">
+            <img id="photo-image" alt="矫正后的照片及树木标注" draggable="false" />
+            <div id="photo-empty" class="empty-state">
+              <span class="empty-glyph">▧</span><strong>暂无矫正照片</strong
+              ><small>选择树木后自动生成</small>
+            </div>
+            <div id="mark-cursor" class="mark-cursor" hidden></div>
+            <div id="edit-hint" class="image-overlay top-left" hidden>
+              点击或拖动至树干位置，松开后更新
+            </div>
+            <div id="photo-risk-cover" class="image-risk-cover" role="status" hidden>
+              <strong>照片疑似含有人体或头部</strong>
+              <small>已暂时隐藏；检测可能误报或漏报，仍需人工核查。</small>
+              <button id="photo-risk-reveal" class="button button-small" data-requires-data>
+                仍要查看此照片
+              </button>
+            </div>
+          </div>
+          <div id="photo-risk-note" class="photo-risk-note" role="status" hidden></div>
+          <div class="card-footer">
+            <span id="photo-details">方位 — · 水平距离 — · 仰角 —</span>
+            <div>
+              <button id="reset-mark" class="text-button" data-requires-data>重置为自动</button
+              ><button id="save-mark" class="text-button emphasis" data-requires-data>
+                保存校正
+              </button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <aside class="right-column">
+        <article id="crop-card" class="result-card crop-card">
+          <div class="card-header">
+            <div><span class="section-kicker">03 / CROP</span><strong>单木切图</strong></div>
+            <div class="card-tools">
+              <span class="tag">畸变矫正</span>
+              <button
+                class="focus-button"
+                data-focus-target="crop-card"
+                data-focus-label="单木切图"
+                aria-label="放大单木切图"
+                aria-controls="crop-card"
+                aria-expanded="false"
+                data-requires-data
+              >
+                放大
+              </button>
+            </div>
+          </div>
+          <div class="image-stage crop-stage">
+            <img id="crop-image" alt="当前树木的竖版切图" />
+            <div id="crop-empty" class="empty-state">
+              <span class="empty-glyph">▧</span><strong>暂无切图</strong
+              ><small>选择树木后自动生成</small>
+            </div>
+            <div id="crop-risk-cover" class="image-risk-cover" role="status" hidden>
+              <strong>切图疑似含有人体或头部</strong>
+              <small>已暂时隐藏；检测可能误报或漏报，仍需人工核查。</small>
+              <button id="crop-risk-reveal" class="button button-small" data-requires-data>
+                仍要查看此切图
+              </button>
+            </div>
+          </div>
+          <div id="crop-risk-note" class="photo-risk-note" role="status" hidden></div>
+          <div class="result-footer">
+            <span id="crop-caption">干净切图用于识别</span
+            ><button id="save-crop" class="button button-small button-outline" data-requires-data>
+              保存 PNG
+            </button>
+          </div>
+        </article>
+        <article id="recognition-card" class="result-card recognition-card">
+          <div class="card-header">
+            <div>
+              <span class="section-kicker">04 / IDENTIFY</span><strong>本地树种识别</strong>
+            </div>
+            <div class="card-tools">
+              <span class="tag tag-green">离线</span>
+              <button
+                class="focus-button"
+                data-focus-target="recognition-card"
+                data-focus-label="识别热力图"
+                aria-label="放大识别热力图"
+                aria-controls="recognition-card"
+                aria-expanded="false"
+                data-requires-data
+              >
+                放大
+              </button>
+            </div>
+          </div>
+          <p class="recognition-desc">
+            配置密钥后，一次启动本地识别与云端分级复核；上传切图前仍需核查确认。
+          </p>
+          <button id="recognize" class="button button-primary full-width" data-requires-data>
+            <span class="button-icon">✳</span> 开始识别（本地 + 云端）
+          </button>
+          <div id="recognition-result" class="recognition-result">
+            <span class="result-placeholder">选择树木后点击识别</span>
+          </div>
+          <details class="species-review" open>
+            <summary>云端辅助与人工确认</summary>
+            <p>本地 18 类与云端视觉分别识别同一干净切图；综合复核不是独立投票，最终由人工确认。</p>
+            <label for="species-key">配置或更换 DeepSeek API 密钥</label>
+            <input id="species-key" type="password" autocomplete="off" spellcheck="false" />
+            <p id="species-key-status" role="status">正在检查本机安全存储…</p>
+            <button id="species-key-save" class="button button-outline">安全保存密钥</button>
+            <button id="species-key-clear" class="button button-outline">删除本机密钥</button>
+            <div id="species-final" class="species-result">最终模型建议：尚未生成</div>
+            <div id="species-visual" class="species-result">云端视觉：尚未请求</div>
+            <div id="species-synthesis" class="species-result">综合复核：尚未请求</div>
+            <p>仅在确认后上传当前切图及识别文字，可能产生费用；未检出人体不代表没有人体。</p>
+            <label for="species-choice">人工最终结果</label>
+            <p>未保存的选择仅在本次运行暂存，按数据集、树和切图隔离；退出后消失。</p>
+            <select id="species-choice" data-requires-data>
+              <option value="">请选择树种</option>
+            </select>
+            <label id="species-other-label" for="species-other" hidden>列表外名称</label>
+            <input id="species-other" maxlength="80" autocomplete="off" data-requires-data hidden />
+            <button id="species-save" class="button button-outline" data-requires-data>
+              人工确认并保存
+            </button>
+            <div id="species-saved" class="species-result" role="status">尚无已保存的人工确认</div>
+          </details>
+          <div class="heat-heading">
+            <span id="heat-title">注意力热力图</span><small>遮挡敏感性</small>
+          </div>
+          <div class="image-stage heat-stage">
+            <img id="heat-image" alt="本地识别注意力热力图" />
+            <div id="heat-empty" class="empty-state compact">
+              <span class="empty-glyph">◌</span><small>识别完成后显示</small>
+            </div>
+          </div>
+          <p class="hint">热力图用于解释当前判定，不代表结果一定正确。</p>
+        </article>
+      </aside>
+    </main>
+
+    <footer class="statusbar">
+      <div>
+        <span id="footer-dot" class="status-dot"></span
+        ><span id="status-text" role="status" aria-live="polite">准备连接本地算法…</span>
+      </div>
+      <span class="footer-note">本地为主 · 云端需确认</span>
+    </footer>
+
+    <dialog id="merge-dialog" class="merge-dialog" aria-labelledby="merge-title">
+      <div class="dialog-header merge-header">
+        <div>
+          <div class="eyebrow">DATA / MERGE</div>
+          <h2 id="merge-title">合并采集数据</h2>
+          <p>先检查影像、位姿和坐标参数，再保存到新的文件夹；不会修改原始数据。</p>
+        </div>
+        <button id="merge-close" class="icon-button" aria-label="关闭合并窗口">✕</button>
+      </div>
+      <div class="merge-body">
+        <section class="merge-section">
+          <div class="merge-section-title">
+            <span class="merge-step">01</span>
+            <div>
+              <strong>选择采集文件夹</strong
+              ><small>至少 2 个；支持 Camera4/Picture/PictureData 采集结构</small>
+            </div>
+          </div>
+          <div id="merge-folders" class="merge-folders">
+            <p class="merge-empty">还没有选择文件夹</p>
+          </div>
+          <button id="merge-add" class="button button-outline">＋ 添加文件夹</button>
+        </section>
+        <section class="merge-section">
+          <div class="merge-section-title">
+            <span class="merge-step">02</span>
+            <div>
+              <strong>树心数据 <span class="merge-optional">可选</span></strong
+              ><small>选择已有 tree_centers2.txt 的数据目录，才能在合并后加载树列表</small>
+            </div>
+          </div>
+          <div class="merge-tree-row">
+            <span id="merge-tree-path">未选择</span
+            ><button id="merge-tree-choose" class="button button-outline button-small">
+              选择树心目录</button
+            ><button id="merge-tree-clear" class="text-button" hidden>清除</button>
+          </div>
+        </section>
+        <section class="merge-section merge-result-section">
+          <div class="merge-section-title">
+            <span class="merge-step">03</span>
+            <div><strong>兼容性分析</strong><small>检查通过后才能开始合并</small></div>
+          </div>
+          <div id="merge-result" class="merge-result" role="status" aria-live="polite">
+            选择文件夹后，点击“分析是否可合并”。
+          </div>
+        </section>
+        <p class="merge-caution">
+          本功能不合并 LAS 或原采集工程。坐标参数一致不代表已精确配准；自动定位仍需人工核查。
+        </p>
+      </div>
+      <div class="merge-actions">
+        <button id="merge-cancel" class="button button-outline">关闭</button>
+        <div class="spacer"></div>
+        <button id="merge-analyze" class="button button-outline" disabled>分析是否可合并</button>
+        <button id="merge-run" class="button button-primary" disabled>选择保存位置并合并</button>
+      </div>
+    </dialog>
+
+    <dialog
+      id="species-preview-dialog"
+      class="species-preview-dialog"
+      aria-labelledby="species-preview-title"
+    >
+      <h2 id="species-preview-title">核查即将上传的干净切图</h2>
+      <p>
+        这张无树号图片才是将要上传的原图。请检查人物、头皮及画面中的敏感文字；未检出不代表没有。
+      </p>
+      <div class="image-stage species-preview-stage">
+        <img id="species-preview-image" alt="即将上传的干净切图" />
+        <div id="species-preview-cover" class="image-risk-cover" role="status" hidden>
+          <strong>这张干净切图疑似含有人体或头部</strong>
+          <small>默认隐藏；如果需要继续核查，请先明确选择查看。</small>
+          <button id="species-preview-reveal" class="button button-small">仍要查看这张切图</button>
+        </div>
+      </div>
+      <p id="species-preview-note" role="status"></p>
+      <label class="species-check">
+        <input id="species-reviewed" type="checkbox" />
+        我已查看上方干净切图，理解可能包含人物及头皮
+      </label>
+      <div class="species-preview-actions">
+        <button id="species-preview-cancel" class="button button-outline">取消</button>
+        <button id="species-preview-approve" class="button button-primary" disabled>
+          已核查，继续
+        </button>
+      </div>
+    </dialog>
+
+    <dialog id="table-dialog" class="table-dialog">
+      <div class="dialog-header">
+        <div>
+          <div class="eyebrow">TREE / FRAME INDEX</div>
+          <h2>树心—全景对照表</h2>
+          <p>沿用原有树心对照规则，不等于水平最近，且不随主帧策略切换。双击一行可定位该帧。</p>
+        </div>
+        <button id="close-table" class="icon-button" aria-label="关闭">✕</button>
+      </div>
+      <div class="table-toolbar">
+        <input
+          id="table-search"
+          type="search"
+          placeholder="筛选树 ID 或帧名"
+          aria-label="筛选对照表"
+        /><span id="table-count">—</span>
+        <div class="spacer"></div>
+        <button id="export-csv" class="button button-outline">导出 CSV</button
+        ><button id="export-xlsx" class="button button-primary">导出 Excel</button>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>树 ID</th>
+              <th>树高 m</th>
+              <th>全景帧</th>
+              <th>水平距离 m</th>
+              <th>方位 °</th>
+              <th>横向偏离 °</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </dialog>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
